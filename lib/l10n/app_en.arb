@@ -1,0 +1,33 @@
+{
+  "@@locale": "en",
+  "appTitle": "Link Shortener",
+  "ls_inputHint": "Paste or type a URL",
+  "ls_emptyState_title": "No links yet",
+  "ls_emptyState_message": "You haven't shortened any links yet. Start now!",
+  "ls_errorInvalidUrl": "Please enter a valid URL",
+  "ls_list_title": "Recently shortened URLs",
+  "@ls_itemsCount": {
+    "description": "Number of shortened links in the list",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "errorNetwork": "No internet connection. Please check your network and try again.",
+  "errorTimeout": "The request took too long. Please try again.",
+  "errorCancelled": "The request was canceled. Please try again.",
+  "errorBadRequest": "We couldn't process your request. Please review the information and try again.",
+  "errorUnauthorized": "You don’t have permission to perform this action.",
+  "errorNotFound": "We couldn’t find what you’re looking for.",
+  "errorServer": "The service is currently unavailable. Please try again later.",
+  "errorHttpUnexpectedStatus": "Unexpected response from the server.",
+  "errorMalformedResponse": "We received an unexpected response format.",
+  "errorMissingFieldUrl": "The server response is missing the URL field.",
+  "errorUnexpected": "Something went wrong. Please try again.",
+  "errorUnexpectedWithDetail": "Something went wrong",
+  "errorInvalidUrlEmpty": "Please enter a URL.",
+  "errorInvalidUrlFormat": "The URL format is invalid.",
+  "errorInvalidUrlScheme": "The URL must start with http:// or https://",
+  "errorInvalidUrlHostEmpty": "The URL must contain a valid host.",
+  "errorInvalidUrlDomain": "The URL domain seems invalid.",
+  "errorInvalidUrlLocalhost": "Local URLs are not allowed.",
+  "errorInvalidUrlLength": "The URL length is invalid.",
+  "errorOpenUrlFailed": "Could not open the URL"
+}

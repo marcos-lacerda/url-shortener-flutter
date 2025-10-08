@@ -1,0 +1,70 @@
+name: url_shortener
+description: "Aplicativo de encurtamento de links desenvolvido em Flutter, com arquitetura limpa (Clean Architecture)
+  e padrão Feature First. Permite ao usuário encurtar URLs rapidamente e visualizar o histórico dos
+  links criados em uma única tela. Implementa gerenciamento de estado com flutter_bloc, injeção de 
+  dependências via injectable/get_it e integração HTTP com Dio."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  # Cliente HTTP poderoso e flexível (recomendado para chamadas REST)
+  dio: ^5.9.0
+
+  # Simplifica comparações de objetos e estados (==, props)
+  equatable: ^2.0.7
+
+  # Framework principal Flutter
+  flutter:
+    sdk: flutter
+
+  # Gerenciamento de estado reativo (MVVM/BLoC)
+  flutter_bloc: ^9.1.1
+
+  # Internacionalização oficial do Flutter (datas, números e mensagens)
+  flutter_localizations:
+    sdk: flutter
+
+  # Service locator utilizado em conjunto com o injectable
+  get_it: ^8.2.0
+
+  # Biblioteca oficial do Google para usar fontes do Google Fonts em Flutter
+  google_fonts: ^6.2.1
+
+  # Injeção de dependências com anotações @injectable e geração automática
+  injectable: ^2.5.2
+
+  # Biblioteca padrão do Flutter/Dart para internacionalização
+  intl: ^0.20.2
+
+  # Para abrir URLs no navegador, apps externos ou deep links
+  url_launcher: ^6.3.2
+
+dev_dependencies:
+  # Testes de blocos e cubits (unit + widget tests)
+  bloc_test: ^10.0.0
+
+  # Gera o código de injeção (injection.config.dart)
+  build_runner: ^2.7.1
+
+  # Lints básicos do Flutter (não obrigatório, mas útil)
+  flutter_lints: ^5.0.0
+
+  # Framework de testes do Flutter
+  flutter_test:
+    sdk: flutter
+
+  # Geração de código de injeção
+  injectable_generator: ^2.8.1
+
+  # Mock de dependências em testes
+  mocktail: ^1.0.4
+
+  # Lints e boas práticas recomendadas pela comunidade Very Good Ventures
+  very_good_analysis: ^10.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true

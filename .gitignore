@@ -1,0 +1,82 @@
+# -----------------------------
+# Flutter / Dart
+# -----------------------------
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.cache/
+.pub-cache/
+.pub/
+build/
+coverage/
+analysis_options.yaml.lock
+*.dill
+
+# -----------------------------
+# IDEs e editores
+# -----------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.DS_Store
+
+# -----------------------------
+# Logs e temporários
+# -----------------------------
+*.log
+*.tmp
+*.swp
+*.swo
+*.orig
+
+# -----------------------------
+# Android
+# -----------------------------
+**/android/.gradle/
+**/android/app/build/
+**/android/build/
+**/android/local.properties
+**/android/.settings/
+**/android/.idea/
+**/android/captures/
+**/android/app/google-services.json
+
+# -----------------------------
+# iOS
+# -----------------------------
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/app.flx
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/Pods/
+**/ios/Podfile.lock
+**/ios/.symlinks/
+**/ios/.generated/
+**/ios/DerivedData/
+**/ios/build/
+**/ios/.idea/
+**/ios/xcuserdata/
+**/ios/Runner.xcworkspace/xcshareddata/
+**/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/
+
+# -----------------------------
+# Linux / macOS / Windows (por via das dúvidas)
+# -----------------------------
+linux/
+macos/
+windows/
+
+# -----------------------------
+# Misc
+# -----------------------------
+.mel
+packages
+.migrate/
+migrate_working_dir/

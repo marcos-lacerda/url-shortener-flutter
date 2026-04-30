@@ -1,5 +1,5 @@
-// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
 
 // **************************************************************************
 // InjectableConfigGenerator
@@ -13,6 +13,7 @@ import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../core/network/dio_error_handler.dart' as _i718;
 import '../../core/services/link_opener.dart' as _i61;
 import '../../core/services/log_service.dart' as _i357;
 import '../../features/link_shortener/data/repositories/alias_repository_impl.dart'
@@ -34,28 +35,31 @@ _i174.GetIt initGetIt(
 }) {
   final gh = _i526.GetItHelper(getIt, environment, environmentFilter);
   final dioInjectableModule = _$DioInjectableModule();
-  gh.factory<_i61.UrlLauncherLinkOpener>(
-    () => const _i61.UrlLauncherLinkOpener(),
-  );
   gh.factory<_i361.BaseOptions>(() => dioInjectableModule.options);
-  gh.lazySingleton<_i357.LogService>(() => const _i357.LogService());
   gh.lazySingleton<_i361.Dio>(() => dioInjectableModule.dio);
+  gh.lazySingleton<_i357.LogService>(() => const _i357.LogService());
+  gh.factory<_i61.ILinkOpener>(() => const _i61.UrlLauncherLinkOpener());
+  gh.lazySingleton<_i718.DioErrorHandler>(
+    () => _i718.DioErrorHandler(gh<_i357.LogService>()),
+  );
   gh.lazySingleton<_i142.IAliasRepository>(
     () => _i700.AliasRepositoryImpl(
       dio: gh<_i361.Dio>(),
       log: gh<_i357.LogService>(),
+      errorHandler: gh<_i718.DioErrorHandler>(),
     ),
-  );
-  gh.factory<_i959.GetAlias>(
-    () => _i959.GetAlias(gh<_i142.IAliasRepository>()),
   );
   gh.factory<_i929.ShortenUrl>(
     () => _i929.ShortenUrl(gh<_i142.IAliasRepository>()),
   );
+  gh.factory<_i959.GetAlias>(
+    () => _i959.GetAlias(gh<_i142.IAliasRepository>()),
+  );
   gh.factory<_i244.LinkShortenerController>(
     () => _i244.LinkShortenerController(
       gh<_i929.ShortenUrl>(),
-      gh<_i61.UrlLauncherLinkOpener>(),
+      gh<_i959.GetAlias>(),
+      gh<_i61.ILinkOpener>(),
     ),
   );
   return getIt;

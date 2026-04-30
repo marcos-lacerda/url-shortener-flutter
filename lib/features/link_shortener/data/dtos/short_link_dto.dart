@@ -17,16 +17,30 @@ class ShortLinkDto {
     required this.shortUrl,
   });
 
-  /// Cria o DTO a partir de um JSON da API.
-  factory ShortLinkDto.fromJson(Map<String, dynamic> json) {
-    final links = json['_links'] as Map<String, dynamic>? ?? {};
+  /// Cria o DTO a partir de um JSON da API ou retorna null se o payload
+  /// não tiver os campos obrigatórios (`alias`, `_links.self`, `_links.short`).
+  static ShortLinkDto? tryFromJson(Map<String, dynamic> json) {
+    final alias = json['alias'] as String?;
+    final links = json['_links'] as Map<String, dynamic>?;
+    final originalUrl = links?['self'] as String?;
+    final shortUrl = links?['short'] as String?;
+
+    if (alias == null ||
+        alias.isEmpty ||
+        originalUrl == null ||
+        originalUrl.isEmpty ||
+        shortUrl == null ||
+        shortUrl.isEmpty) {
+      return null;
+    }
 
     return ShortLinkDto(
-      alias: json['alias'] as String,
-      originalUrl: links['self'] as String,
-      shortUrl: links['short'] as String,
+      alias: alias,
+      originalUrl: originalUrl,
+      shortUrl: shortUrl,
     );
   }
+
   final String alias;
   final String originalUrl;
   final String shortUrl;

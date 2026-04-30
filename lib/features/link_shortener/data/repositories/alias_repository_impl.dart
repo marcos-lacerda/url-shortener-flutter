@@ -16,20 +16,23 @@ import 'package:url_shortener/features/link_shortener/domain/value_objects/url_t
 
 @LazySingleton(as: IAliasRepository)
 class AliasRepositoryImpl implements IAliasRepository {
-  AliasRepositoryImpl({required Dio dio, required LogService log})
-    : _dio = dio,
-      _log = log,
-      _errorHandler = DioErrorHandler(log);
+  AliasRepositoryImpl({
+    required Dio dio,
+    required LogService log,
+    required DioErrorHandler errorHandler,
+  })  : _dio = dio,
+        _log = log,
+        _errorHandler = errorHandler;
   final Dio _dio;
   final LogService _log;
   final DioErrorHandler _errorHandler;
 
-  static const _defaultHeaders = {
-    'Content-Type': 'application/json',
-    'x-origin': 'br.com.nu.url.shortener',
-  };
-
-  Options get _options => Options(headers: _defaultHeaders);
+  static final _options = Options(
+    headers: const {
+      'Content-Type': 'application/json',
+      'x-origin': 'br.com.nu.url.shortener',
+    },
+  );
 
   @override
   Future<Either<Failure, ShortLink>> shortenURL({
@@ -39,19 +42,28 @@ class AliasRepositoryImpl implements IAliasRepository {
 
     final body = {'url': url.value.toString()};
 
-    _log..info('POST $endpoint', tag: 'AliasRepo')
-    ..info('Body: $body', tag: 'AliasRepo');
+    _log
+      ..info('POST $endpoint', tag: 'AliasRepo')
+      ..info('Body: $body', tag: 'AliasRepo');
 
     try {
-      final response = await _dio.post<Map<String, dynamic>>(endpoint,
-          data: body, options: _options);
+      final response = await _dio.post<Map<String, dynamic>>(
+        endpoint,
+        data: body,
+        options: _options,
+      );
       _log.success('Response: ${response.statusCode}', tag: 'AliasRepo');
 
-      if (response.data is! Map<String, dynamic>) {
+      final data = response.data;
+      if (data == null) {
         return left(const ServerFailure('errorMalformedResponse'));
       }
 
-      final dto = ShortLinkDto.fromJson(response.data!);
+      final dto = ShortLinkDto.tryFromJson(data);
+      if (dto == null) {
+        return left(const ServerFailure('errorMalformedResponse'));
+      }
+
       return right(dto.toDomain());
     } on DioException catch (e) {
       return _errorHandler.handle<ShortLink>(e, tag: 'AliasRepo');
@@ -68,15 +80,18 @@ class AliasRepositoryImpl implements IAliasRepository {
     _log.info('GET $endpoint', tag: 'AliasRepo');
 
     try {
-      final response = await _dio.get<Map<String, dynamic>>(endpoint,
-          options: _options);
+      final response = await _dio.get<Map<String, dynamic>>(
+        endpoint,
+        options: _options,
+      );
       _log.success('Response: ${response.statusCode}', tag: 'AliasRepo');
 
-      if (response.data is! Map<String, dynamic>) {
+      final data = response.data;
+      if (data == null) {
         return left(const ServerFailure('errorMalformedResponse'));
       }
 
-      final url = response.data!['url'] as String?;
+      final url = data['url'] as String?;
 
       if (url == null || url.isEmpty) {
         return left(const ServerFailure('errorMissingFieldUrl'));

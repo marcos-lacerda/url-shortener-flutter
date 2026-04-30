@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import 'package:url_shortener/core/errors/failure.dart';
 import 'package:url_shortener/core/result/either.dart';
 import 'package:url_shortener/core/result/either_extensions.dart';
@@ -6,6 +7,7 @@ import 'package:url_shortener/core/services/log_service.dart';
 
 /// Classe responsável por mapear e tratar erros do Dio.
 /// Transforma [DioException] em instâncias de [Failure],
+@LazySingleton()
 class DioErrorHandler {
   const DioErrorHandler(this._log);
 

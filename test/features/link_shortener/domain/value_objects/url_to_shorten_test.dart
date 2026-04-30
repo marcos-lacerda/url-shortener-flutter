@@ -29,9 +29,35 @@ void main() {
     });
 
     test('fails when length is out of bounds', () {
-      final long = 'https://${'a' * 2050}.com';
+      final long = 'https://example.com/?${'a' * 2050}';
       final failure = failureFrom(long);
       expect(failure.code, 'errorInvalidUrlLength');
+    });
+
+    test('fails when TLD is not a known gTLD or 2-letter ccTLD', () {
+      final failure = failureFrom('www.uol');
+      expect(failure, isA<ValidationFailure>());
+      expect(failure.code, 'errorInvalidUrlDomain');
+    });
+
+    test('fails for single-label host even with valid scheme', () {
+      final failure = failureFrom('https://localhost-ish');
+      expect(failure.code, 'errorInvalidUrlDomain');
+    });
+
+    test('accepts ccTLD (2 letters)', () {
+      expect(valueFrom('uol.com.br').value.host, 'uol.com.br');
+      expect(valueFrom('example.de').value.host, 'example.de');
+    });
+
+    test('accepts common new-gTLDs', () {
+      expect(valueFrom('myapp.dev').value.host, 'myapp.dev');
+      expect(valueFrom('hello.io').value.host, 'hello.io');
+    });
+
+    test('rejects domain with consecutive dots or trailing hyphen', () {
+      expect(failureFrom('foo..com').code, 'errorInvalidUrlDomain');
+      expect(failureFrom('foo-.com').code, 'errorInvalidUrlDomain');
     });
   });
 }

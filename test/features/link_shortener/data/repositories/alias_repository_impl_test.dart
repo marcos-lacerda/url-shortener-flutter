@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:url_shortener/core/errors/failure.dart';
+import 'package:url_shortener/core/network/dio_error_handler.dart';
 import 'package:url_shortener/core/services/log_service.dart';
 import 'package:url_shortener/features/link_shortener/data/repositories/alias_repository_impl.dart';
 import 'package:url_shortener/features/link_shortener/domain/value_objects/alias.dart';
@@ -16,11 +17,17 @@ void main() {
 
   group('AliasRepositoryImpl', () {
     late MockDio dio;
+    late DioErrorHandler errorHandler;
     late AliasRepositoryImpl repository;
 
     setUp(() {
       dio = MockDio();
-      repository = AliasRepositoryImpl(dio: dio, log: const LogService());
+      errorHandler = const DioErrorHandler(LogService());
+      repository = AliasRepositoryImpl(
+        dio: dio,
+        log: const LogService(),
+        errorHandler: errorHandler,
+      );
     });
 
     group('shortenURL', () {

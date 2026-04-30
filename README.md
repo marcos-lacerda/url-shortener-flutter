@@ -23,6 +23,40 @@ Aplicativo Flutter para encurtamento de URLs, mantendo um histórico somente em 
   - Injeção via `injectable` gerando `injection.config.dart`.
 - Internacionalização integrada ao MaterialApp com suporte a inglês e português (Brasil).
 
+ ## 🏛️ Decisões Arquiteturais e Trade-Offs
+
+Para este desafio, a arquitetura foi desenhada com foco em **escalabilidade, testabilidade e manutenibilidade**, simulando um ambiente de produção real. Abaixo estão as principais decisões e os compromissos (*trade-offs*) assumidos:
+
+#### 1. Clean Architecture & Feature First
+Optei por uma estrutura baseada em **Clean Architecture**, combinada com a organização de pastas por *Feature*.
+* **Decisão:** Separar o projeto em camadas lógicas bem definidas (*Data*, *Domain* e *Presentation*).
+* **Trade-off:** Em um aplicativo de apenas uma tela, essa estrutura pode parecer um pouco densa inicialmente. No entanto, como o objetivo do desafio é justamente avaliar a capacidade arquitetural, utilizei essa abordagem para demonstrar a minha visão de como um projeto sólido deve ser estruturado. O maior ganho é garantir que a regra de negócio fique totalmente isolada e agnóstica em relação a frameworks (UI) ou APIs externas.
+
+#### 2. Value Objects para Validação de Domínio
+Em vez de tratar URLs e Aliases como simples `Strings`, utilizei **Value Objects** (`UrlToShorten` e `Alias`).
+* **Decisão:** A validação ocorre no momento da criação do objeto de domínio, impedindo que dados inválidos fluam para as camadas de Repositório ou Caso de Uso.
+* **Trade-off:** Isto aumenta a verbosidade inicial (mais classes), mas garante o princípio de *Always Valid Domain Model*, reduzindo drasticamente a necessidade de verificações (`if/else`) espalhadas pela UI ou controladores.
+
+#### 3. Tratamento Funcional de Erros (Pattern Either)
+Utilizei o padrão de **Programação Funcional** através da estrutura `Either` para lidar com fluxos de erro.
+* **Decisão:** Em vez de utilizar o padrão `try/catch` tradicional, que se baseia em efeitos colaterais e exceções que podem não ser capturadas, o erro é tratado como um valor de retorno explícito.
+* **Trade-off:** Exige uma curva de aprendizagem levemente maior, mas torna as falhas explícitas na assinatura dos métodos, obrigando o desenvolvedor a lidar com o cenário de erro na camada de apresentação de forma segura.
+
+#### 4. Gestão de Estado com Cubit
+Escolhi o **Cubit** (do ecossistema `flutter_bloc`) para a gestão de estado.
+* **Decisão:** O Cubit oferece a reatividade necessária para uma interface dinâmica com menos *boilerplate* que o Bloc tradicional.
+* **Trade-off:** Para fluxos extremamente complexos com muitas transformações de eventos, o Bloc seria superior. Para este escopo, o Cubit oferece o equilíbrio perfeito entre simplicidade, performance e separação de lógica.
+
+#### 5. Inversão de Dependência e Testabilidade
+Todas as dependências externas (Dio, LinkOpener, Repositories) são injetadas através de interfaces (abstrações).
+* **Decisão:** Utilizei o `get_it` com `injectable` para garantir que o código dependa de contratos e não de implementações concretas.
+* **Trade-off:** Adiciona uma etapa de geração de código ao processo de desenvolvimento, mas em troca, permite uma cobertura de testes unitários e de UI de 100%, já que qualquer componente pode ser facilmente substituído por um *Mock* ou *Fake*.
+
+#### 6. UX: Promoção de Duplicados (Product Mindset)
+Implementei uma lógica de verificação de duplicados diretamente no controlador (`_checkDuplicateAndPromote`).
+* **Decisão:** Se o utilizador tentar encurtar uma URL que já consta na sua lista histórica, a aplicação não gera um erro nem faz uma nova chamada à API; apenas move o item existente para o topo da lista.
+* **Trade-off:** Adiciona uma pequena complexidade lógica no Cubit, mas melhora significativamente a experiência do utilizador e economiza recursos de rede e processamento no servidor.
+
 ## Objetivo
 Fornecer uma experiência simples e responsiva para encurtar URLs, copiar/abrir os links gerados e gerenciar o histórico recente diretamente no dispositivo móvel.
 

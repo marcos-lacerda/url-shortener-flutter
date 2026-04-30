@@ -56,37 +56,38 @@ class _LinkShortenerView extends StatelessWidget {
     return BlocBuilder<LinkShortenerController, LinkShortenerState>(
       builder: (context, state) {
         return GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            behavior: HitTestBehavior.translucent,
-            child: Scaffold(
-              appBar: AppBar(
-                centerTitle: true,
-                title: Text(AppLocalizations.of(context)!.appTitle),
-              ),
-              body: SafeArea(
-                child: Padding(
-                  padding: AppSpacing.all(AppSpacing.lg),
-                  child: Column(
-                    spacing: AppSpacing.xl,
-                    children: [
-                      Row(
-                        spacing: AppSpacing.md,
-                        children: [
-                          _buildURLTextField(context),
-                          _buildSendButton(context),
-                        ],
-                      ),
-                      _buildErrorMessage(context),
-                      _buildLoadingState(context),
-                      _buildListURL(context),
-                      _buildEmptyState(context),
-                    ],
-                  ),
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          behavior: HitTestBehavior.translucent,
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              centerTitle: true,
+              title: Text(AppLocalizations.of(context)!.appTitle),
+            ),
+            body: SafeArea(
+              child: Padding(
+                padding: AppSpacing.all(AppSpacing.lg),
+                child: Column(
+                  spacing: AppSpacing.xl,
+                  children: [
+                    Row(
+                      spacing: AppSpacing.md,
+                      children: [
+                        _buildURLTextField(context),
+                        _buildSendButton(context),
+                      ],
+                    ),
+                    _buildErrorMessage(context),
+                    _buildLoadingState(context),
+                    _buildListURL(context),
+                    _buildEmptyState(context),
+                  ],
                 ),
               ),
-            )
+            ),
+          ),
         );
       },
     );
@@ -127,34 +128,35 @@ class _LinkShortenerView extends StatelessWidget {
   // #region URL List Builder
   Widget _buildListURL(BuildContext context) {
     final controller = context.read<LinkShortenerController>();
-    return BlocSelector<
-      LinkShortenerController,
-      LinkShortenerState,
-      LinkShortenerState
-    >(
-      selector: (s) => s,
-      builder: (context, state) {
-        if ((state is LinkShortenerLoading) || state.items.isEmpty) {
-          return const SizedBox.shrink();
-        }
-        return Flexible(
-          child: AppList<ShortLink>(
-            title: AppLocalizations.of(context)!.ls_list_title,
-            items: state.items,
-            itemBuilder: (context, item) {
-              return ListTile(
-                leading: const Icon(Icons.link),
-                title: Text(item.short.toString()),
-                onTap: () => controller.open(item),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => controller.deleteLink(item),
-                ),
+    return Flexible(
+      child:
+          BlocSelector<
+            LinkShortenerController,
+            LinkShortenerState,
+            LinkShortenerState
+          >(
+            selector: (s) => s,
+            builder: (context, state) {
+              if ((state is LinkShortenerLoading) || state.items.isEmpty) {
+                return const SizedBox.shrink();
+              }
+              return AppList<ShortLink>(
+                title: AppLocalizations.of(context)!.ls_list_title,
+                items: state.items,
+                itemBuilder: (context, item) {
+                  return ListTile(
+                    leading: const Icon(Icons.link),
+                    title: Text(item.short.toString()),
+                    onTap: () => controller.open(item),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => controller.deleteLink(item),
+                    ),
+                  );
+                },
               );
             },
           ),
-        );
-      },
     );
   }
   // #endregion
@@ -211,10 +213,14 @@ class _LinkShortenerView extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
-        return EmptyState(
-          icon: Icons.link_off,
-          title: AppLocalizations.of(context)!.ls_emptyState_title,
-          message: AppLocalizations.of(context)!.ls_emptyState_message,
+        return Flexible(
+          child: SingleChildScrollView(
+            child: EmptyState(
+              icon: Icons.link_off,
+              title: AppLocalizations.of(context)!.ls_emptyState_title,
+              message: AppLocalizations.of(context)!.ls_emptyState_message,
+            ),
+          ),
         );
       },
     );
